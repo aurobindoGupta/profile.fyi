@@ -38,7 +38,7 @@ export default function Cart() {
   }, []);
 
   useEffect(() => {
-    if (cartDataList[0].id !== 0 && productDataList[0].id !== 0) {
+    if (cartDataList[0]?.id !== 0 && productDataList[0].id !== 0) {
       const savedCartDetails = productDataList.filter((item) => {
         if (cartDataList.find((itm) => itm.id === item.id)) {
           return item;
@@ -93,73 +93,80 @@ export default function Cart() {
       errorAlert(2000, "Wroking Codes Are:: DISC10, DISC10%");
     }
   };
+  // console.log({cartValue})
 
   return (
     <div className="h-full p-5 flex flex-col gap-5 sm:flex-row overflow-hidden">
-      <div className="h-full w-full flex flex-col gap-2 overflow-y-auto">
-        {cartValue &&
-          parseInt(cartValue[0].qty) !== 0 &&
-          cartValue.map((items) => {
-            return (
-              <>
-                <CartCard
-                  name={items.itemDetails.title}
-                  price={items.itemDetails.price.toString()}
-                  rating={items.itemDetails.rating.toString()}
-                  imgSrc={items.itemDetails.images[0]}
-                  id={items.itemDetails.id.toString()}
-                  qty={items.qty}
+      {cartValue?.length ? (
+        <>
+          <div className="h-full w-full flex flex-col gap-2 overflow-y-auto">
+            {cartValue &&
+              parseInt(cartValue[0]?.qty) !== 0 &&
+              cartValue.map((items) => {
+                return (
+                  <>
+                    <CartCard
+                      name={items.itemDetails.title}
+                      price={items.itemDetails.price.toString()}
+                      rating={items.itemDetails.rating.toString()}
+                      imgSrc={items.itemDetails.images[0]}
+                      id={items.itemDetails.id.toString()}
+                      qty={items.qty}
+                    />
+                  </>
+                );
+              })}
+          </div>
+          <div className="flex flex-col gap-2 sm:w-[30%]">
+            <div className="flex justify-between">
+              <div className="text-lg font-bold ">Bill</div>
+              <button
+                className="bg-gray-500 p-1 px-3 rounded-md text-white"
+                onClick={() => setDiscountFLag(true)}
+              >
+                Add Discount
+              </button>
+            </div>
+            {discountFlag && (
+              <div className="flex justify-between">
+                <input
+                  type="text"
+                  className="border"
+                  placeholder="DISC10, DISC10%"
+                  onChange={(e) => setDiscountCode(e.target.value)}
                 />
-              </>
-            );
-          })}
-      </div>
-      <div className="flex flex-col gap-2 sm:w-[30%]">
-        <div className="flex justify-between">
-          <div className="text-lg font-bold ">Bill</div>
-          <button
-            className="bg-gray-500 p-1 px-3 rounded-md text-white"
-            onClick={() => setDiscountFLag(true)}
-          >
-            Add Discount
-          </button>
-        </div>
-        {discountFlag && (
-          <div className="flex justify-between">
-            <input
-              type="text"
-              className="border"
-              placeholder="DISC10, DISC10%"
-              onChange={(e) => setDiscountCode(e.target.value)}
-            />
-            <button className={primaryBtn} onClick={() => handleDiscount()}>
-              Add
-            </button>
+                <button className={primaryBtn} onClick={() => handleDiscount()}>
+                  Add
+                </button>
+                <button
+                  className={secondaryBtn}
+                  onClick={() => {
+                    setDiscountFLag(false), setPaybleCost(totalCartCost);
+                  }}
+                >
+                  X
+                </button>
+              </div>
+            )}
+            <div className="text-sm sm:text-lg">
+              Cart Total Amount(Rs): {totalCartCost}
+            </div>
+            {paybleCost && (
+              <div className="text-sm sm:text-lg font-semibold">
+                Payable Total Amount(Rs): {paybleCost}
+              </div>
+            )}
             <button
-              className={secondaryBtn}
-              onClick={() => {
-                setDiscountFLag(false), setPaybleCost(totalCartCost);
-              }}
+              className={`${primaryBtn} w-full`}
+              onClick={() => router.push("/checkout")}
             >
-              X
+              Checkout
             </button>
           </div>
-        )}
-        <div className="text-sm sm:text-lg">
-          Cart Total Amount(Rs): {totalCartCost}
-        </div>
-        {paybleCost && (
-          <div className="text-sm sm:text-lg font-semibold">
-            Payable Total Amount(Rs): {paybleCost}
-          </div>
-        )}
-        <button
-          className={`${primaryBtn} w-full`}
-          onClick={() => router.push("/checkout")}
-        >
-          Checkout
-        </button>
-      </div>
+        </>
+      ) : (
+        <div className="bg-red-300 text-2xl h-fit">CART IS EMPTY</div>
+      )}
     </div>
   );
 }

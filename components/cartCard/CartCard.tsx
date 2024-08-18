@@ -26,7 +26,7 @@ export default function CartCard(props: CartCardType) {
   const { imgSrc, name, price, rating, id, qty } = props;
 
   useEffect(() => {
-    if (cartDataList[0].id !== 0) {
+    if (cartDataList[0]?.id !== 0) {
       localStorage.setItem("cartVal", JSON.stringify(cartDataList));
     }
   }, [cartDataList]);

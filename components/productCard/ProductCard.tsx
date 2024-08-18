@@ -19,7 +19,7 @@ export default function ProductCard(props: ProductCardType) {
   );
 
   useEffect(() => {
-    if (cartDataList[0].id !== 0) {
+    if (cartDataList[0]?.id !== 0) {
       localStorage.setItem("cartVal", JSON.stringify(cartDataList));
     }
   }, [cartDataList]);
@@ -31,7 +31,10 @@ export default function ProductCard(props: ProductCardType) {
       (item) => item.id === parseInt(id)
     );
     if (selectedProduct) {
-      if (cartDataList.find((item) => item.id === parseInt(id))) {
+      if (
+        cartDataList[0]?.id &&
+        cartDataList.find((item) => item.id === parseInt(id))
+      ) {
         dispatch(updateToCartList({ id: selectedProduct.id, qty: 1 }));
       } else {
         dispatch(addToCartList({ id: selectedProduct.id, qty: 1 }));
@@ -41,6 +44,8 @@ export default function ProductCard(props: ProductCardType) {
       console.error("error adding product to cart");
     }
   };
+
+  console.log(cartDataList)
 
   return (
     <div className="rounded-md border border-black p-2 h-[300px] w-[250px] flex flex-col justify-between">

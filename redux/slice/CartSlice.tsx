@@ -16,7 +16,7 @@ export const CartListSlice = createSlice({
     },
     addToCartList: (state, action: PayloadAction<CartDataType>) => {
       if (action.payload) {
-        if (state.value[0].id) {
+        if (state.value[0]?.id) {
           state.value = [...state.value, action.payload];
         } else {
           state.value = [action.payload];
@@ -57,6 +57,8 @@ export const CartListSlice = createSlice({
           state.value = state.value.filter((item) => {
             if (item.id !== action.payload.id) {
               return item;
+            } else if (state.value.length === 1) {
+              state = initialState;
             }
           });
         }
